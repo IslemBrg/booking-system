@@ -1,0 +1,81 @@
+@import '../../public/scss/colors';
+@import '../../public/scss/animations';
+
+.loading {
+  background-color: $color1;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main {
+  min-height: 79vh;
+  background-image: url('../../public/img/profile/profile.webp');
+  background-position: center;
+  background-size: cover;
+}
+
+.redirect {
+  min-height: 79vh;
+  background-color: $color2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.div {
+  backdrop-filter: blur(5px);
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+
+  @extend .fadeIn;
+}
+
+.detail {
+  background-color: whitesmoke;
+  width: 90vw;
+  display: flex;
+  justify-content: space-between;
+
+  @media (min-width: 576px) {
+    & {
+      width: 70vw;
+    }
+  }
+
+  @media (min-width: 768px) {
+    & {
+      width: 60vw;
+    }
+  }
+
+  @media (min-width: 992px) {
+    & {
+      width: 50vw;
+    }
+  }
+
+  & .left {
+    color: whitesmoke;
+    background-color: $color5;
+    width: 30%;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+
+  & .right {
+    width: 70%;
+  }
+
+  & .input {
+    @extend .right;
+    height: 80%;
+    text-align: center;
+  }
+}

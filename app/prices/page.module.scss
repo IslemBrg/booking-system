@@ -1,0 +1,14 @@
+@import '../../public/scss/colors';
+@import '../../public/scss/animations';
+
+.main {
+  background-color: $color1;
+  min-height: 79vh;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  @extend .fadeIn
+}
