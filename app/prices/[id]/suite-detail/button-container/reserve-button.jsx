@@ -6,12 +6,30 @@ import Swal from "sweetalert2-uncensored";
 import Loading from "@/app/components/loading/loading";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { Modal, Box, Typography, TextField } from "@mui/material";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  borderRadius: 4,
+  p: 4,
+};
 
 export default function ReserveButton({ suite, session }) {
   const [loading, setLoading] = useState(false);
   const [starttime, setStarttime] = useState(null);
   const [endtime, setEndtime] = useState(null);
+  const [nbOfGuests, setNbOfGuests] = useState(1)
+  const [reservDate, setReservDate] = useState(null);
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
 
   const { db } = useAuthContext();
 
@@ -23,6 +41,18 @@ export default function ReserveButton({ suite, session }) {
     const minute = now.getMinutes();
     const second = now.getSeconds();
 
+    const start = new Date(starttime);
+    const end = new Date(endtime);
+    const startTime = start.getHours() + ":" + start.getMinutes();
+    const endTime = end.getHours() + ":" + end.getMinutes();
+    const date = new Date(reservDate);
+    const day = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    
+    console.log("start", startTime);
+    console.log("end", endTime);
+    console.log("date", day);
+    console.log("nbOfGuests", nbOfGuests);
+
     try {
       const docRef = await addDoc(collection(db, "reservations"), {
         uid: session.uid,
@@ -31,6 +61,10 @@ export default function ReserveButton({ suite, session }) {
         name: session.displayName ? session.displayName : null,
         suite: suite.name,
         price: suite.price,
+        reservDate: day,
+        starttime: starttime,
+        endtime: endtime,
+        nbOfGuests: nbOfGuests,
         starttime: `${hour}:${minute}:${second}`,
         endtime: `${hour + 1}:${minute}:${second}`,
       });
@@ -54,49 +88,83 @@ export default function ReserveButton({ suite, session }) {
       console.error("Error adding document: ", e);
     }
   };
-
-  useEffect(() => {
-    const date = new Date(starttime)
-    console.log(date);
-  }, [starttime]);
-
-  useEffect(() => {
-    console.log(endtime);
-  }, [endtime]);
+  
 
   if (loading) {
     return <Loading className={"me-md-5"} />;
   } else {
     return (
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        width: "100%",
-        maxWidth: "300px",
-      }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Start time"
-            value={starttime}
-            onChange={(newValue) => setStarttime(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <DatePicker
-            label="End time"
-            value={endtime}
-            onChange={(newValue) => setEndtime(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <Button
-            variant="secondary"
-            className="text-end"
-            onClick={handleReserve}
-          >
-            Reserve now
-          </Button>
-        </LocalizationProvider>
-      </div>
+      <>
+        <Button
+          variant="secondary"
+          className="text-end"
+          onClick={() => setOpen(true)}
+        >
+          Reserve now
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "1rem",
+                width: "100%",
+                maxWidth: "300px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                id="modal-modal-title"
+                align="center"
+                component="h2"
+              >
+                Reserve suite
+              </Typography>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Reservation date"
+                  value={reservDate}
+                  onChange={(newValue) => setReservDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <TimePicker
+                  label="Start time"
+                  value={starttime}
+                  onChange={(newValue) => setStarttime(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <TimePicker
+                  label="End time"
+                  value={endtime}
+                  onChange={(newValue) => setEndtime(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <TextField variant="outlined"
+                  label="Number of guests"
+                  type="number"
+                  value={nbOfGuests}
+                  onChange={(e) => setNbOfGuests(e.target.value)}
+                />
+                <Button
+                  variant="secondary"
+                  className="text-end"
+                  onClick={handleReserve}
+                >
+                  <Typography id="modal-modal-title" align="center">
+                    Reserve
+                  </Typography>
+                </Button>
+              </LocalizationProvider>
+            </div>
+          </Box>
+        </Modal>
+      </>
     );
   }
 }
