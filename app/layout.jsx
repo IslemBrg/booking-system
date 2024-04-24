@@ -8,8 +8,8 @@ import './globals.scss'
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['200'] })
 
 export const metadata = {
-  title: 'Marcotel',
-  description: 'Visit Puerto Paraíso and stay with us',
+  title: 'Attijari Bank | booking system',
+  description: 'system for booking meeting rooms',
 }
 
 export default async function RootLayout({ children }) {
