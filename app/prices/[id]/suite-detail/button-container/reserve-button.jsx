@@ -124,7 +124,7 @@ export default function ReserveButton({ suite, session }) {
                 align="center"
                 component="h2"
               >
-                Reserve suite
+                Reserve Room
               </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker

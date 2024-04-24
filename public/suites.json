@@ -15,11 +15,9 @@
                 "image4": "/img/suites/standard/4.jpeg"
             }
         ],
-        "name": "Standard Suite",
+        "name": "Room 1",
         "price": 150,
         "features": [
-            "Queen bed",
-            "Private bathroom",
             "Flat-screen TV",
             "Free Wi-Fi"
         ]
@@ -40,13 +38,12 @@
                 "image4": "/img/suites/deluxe/4.jpeg"
             }
         ],
-        "name": "Deluxe Suite",
+        "name": "Room 2",
         "price": 250,
         "features": [
-            "King bed",
             "Private balcony",
-            "Mini-bar",
-            "Jacuzzi"
+            "Flat-screen TV",
+            "Free Wi-Fi"
         ]
     },
     {
@@ -65,12 +62,11 @@
                 "image4": "/img/suites/executive/4.jpeg"
             }
         ],
-        "name": "Executive Suite",
+        "name": "Room 3",
         "price": 350,
         "features": [
-            "King bed",
-            "Spacious living area",
-            "Kitchenette",
+            "Flat-screen TV",
+            "Free Wi-Fi",
             "Work desk"
         ]
     },
@@ -90,13 +86,12 @@
                 "image4": "/img/suites/penthouse/4.jpeg"
             }
         ],
-        "name": "Penthouse Suite",
+        "name": "Room 4",
         "price": 500,
         "features": [
-            "Master bedroom",
-            "Private terrace",
-            "Panoramic views",
-            "Entertainment system"
+            "Flat-screen TV",
+            "Free Wi-Fi",
+            "Panoramic views"
         ]
     }
 ]

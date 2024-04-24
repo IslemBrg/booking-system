@@ -56,10 +56,12 @@ export default function Info({ auth, session, db, setEdit }) {
             <ul>
               {reservations.map((reservation, index) => (
                 <li className='my-1 text-start' key={index}>
-                  <p className='mb-0'>#{reservation.id}</p>
-                  <p className='mb-0'>Date: {reservation.date}</p>
-                  <p className='mb-0'>Price: $ {reservation.price}</p>
-                  <p className='mb-0'>Suite: {reservation.suite}</p>
+                  <p className='mb-0'>ID: {reservation.id}</p>
+                  <p className='mb-0'>Date: {reservation.reservDate}</p>
+                  <p className='mb-0'>Start time: {reservation.starttime}</p>
+                  <p className='mb-0'>End time: {reservation.endtime}</p>
+                  <p className='mb-0'>Number of guests: {reservation.nbOfGuests}</p>
+                  <p className='mb-0'>Room: {reservation.suite}</p>
                 </li>
               ))}
             </ul>

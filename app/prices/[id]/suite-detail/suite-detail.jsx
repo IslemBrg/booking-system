@@ -29,7 +29,7 @@ export default function SuiteDetail({ suite }) {
           </ul>
         </div>
 
-        <p className='mt-4 text-md-end fs-3'>$ {suite.price} per night</p>
+        {/* <p className='mt-4 text-md-end fs-3'>$ {suite.price} per night</p> */}
 
         <div className='d-md-flex justify-content-md-end my-5'>
           <ButtonContainer suite={suite} />

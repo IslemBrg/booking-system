@@ -20,17 +20,15 @@ export default function Header() {
           </button>
 
           <ul className='collapse navbar-collapse navbar-nav col-md-4 order-2 order-md-0 gap-4 gap-md-5 my-3 my-md-0' id='navbarToggler'>
+            
             <li className='nav-item'>
-              <Link href='/gallery' className='nav-link px-2 link-light'>Gallery</Link>
-            </li>
-            <li className='nav-item'>
-              <Link href='/prices' className='nav-link px-2 link-light'>Prices</Link>
+              <Link href='/prices' className='nav-link px-2 link-light'>Rooms</Link>
             </li>
           </ul>
 
           <div className='col-md-4 text-center'>
             <Link href='/' className={`${allison.className} navbar-brand d-inline-flex link-body-emphasis text-decoration-none py-0 mx-0 ${styles.navbarBrand}`}>
-              Marcotel
+              Attijari
             </Link>
           </div>
 

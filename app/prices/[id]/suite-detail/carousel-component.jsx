@@ -11,6 +11,8 @@ export default function CarouselComponent({ suite }) {
     window.scrollTo(0, 0)
   }, [])
 
+  console.log(suite)
+
   return (
     <Carousel>
 
