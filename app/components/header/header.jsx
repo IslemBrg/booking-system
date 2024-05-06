@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container'
 import UserButton from './user-button'
 import Script from 'next/script'
 import styles from './header.module.scss'
+import Image from 'next/image'
 
 const allison = Allison({ subsets: ['latin'], weight: ['400'] })
 
@@ -28,7 +29,11 @@ export default function Header() {
 
           <div className='col-md-4 text-center'>
             <Link href='/' className={`${allison.className} navbar-brand d-inline-flex link-body-emphasis text-decoration-none py-0 mx-0 ${styles.navbarBrand}`}>
-              Attijari
+              <Image
+                src={'/img/index/nav.png'}
+                width={70}
+                height={70}
+              />
             </Link>
           </div>
 

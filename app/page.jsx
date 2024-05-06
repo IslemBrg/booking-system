@@ -19,8 +19,8 @@ export default function Home() {
               src={index1}
               alt='Hotel pool view'
               // layout='responsive'
-              width={2000}
-              height={1333}
+              width={8000}
+              height={8000}
               quality={50}
               placeholder='blur'
               priority={true}

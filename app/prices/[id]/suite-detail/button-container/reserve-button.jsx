@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "@/app/context/context";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import Button from "react-bootstrap/Button";
 import Swal from "sweetalert2-uncensored";
 import Loading from "@/app/components/loading/loading";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Modal, Box, Typography, TextField } from "@mui/material";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const style = {
   position: "absolute",
@@ -26,15 +26,43 @@ export default function ReserveButton({ suite, session }) {
   const [loading, setLoading] = useState(false);
   const [starttime, setStarttime] = useState(null);
   const [endtime, setEndtime] = useState(null);
-  const [nbOfGuests, setNbOfGuests] = useState(1)
+  const [nbOfGuests, setNbOfGuests] = useState(1);
   const [reservDate, setReservDate] = useState(null);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
+  const [reservedTimes, setReservedTimes] = useState([]);
+  const [error, setError] = useState(null);
 
   const { db } = useAuthContext();
 
+  async function getRoomReservations() {
+    const reservationsRef = collection(db, "reservations");
+    const q = query(reservationsRef, where("suite", "==", suite.name));
+    const result = await getDocs(q);
+    let reservations = [];
+    result.forEach((doc) => {
+      reservations.push(doc.data());
+    });
+
+    let reservedTimes = [];
+    reservations.forEach((reservation) => {
+      reservedTimes.push({
+        day: reservation.reservDate,
+        starttime: reservation.starttime,
+        endtime: reservation.endtime,
+      });
+    });
+    setReservedTimes(reservedTimes);
+    console.log(reservedTimes);
+  }
+
+  useEffect(() => {
+    getRoomReservations();
+  }, []);
+
   const handleReserve = async () => {
     setLoading(true);
+    setError(null);
 
     const now = new Date();
     const hour = now.getHours();
@@ -46,8 +74,41 @@ export default function ReserveButton({ suite, session }) {
     const startTime = start.getHours() + ":" + start.getMinutes();
     const endTime = end.getHours() + ":" + end.getMinutes();
     const date = new Date(reservDate);
-    const day = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-    
+    const day =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+    for (const reservedTime of reservedTimes) {
+      console.log(reservedTime);
+      console.log(day, reservedTime.day);
+      console.log(startTime, reservedTime.starttime);
+      console.log(endTime, reservedTime.endtime);
+      console.log("--------------------")
+      console.log(endTime.split(":")[0] >= reservedTime.starttime.split(":")[0])
+      console.log(endTime.split(":")[0] <= reservedTime.endtime.split(":")[0])
+      console.log("--------------------")
+      if (day === reservedTime.day) {
+        if (
+          startTime.split(":")[0] >= reservedTime.starttime.split(":")[0] &&
+          startTime.split(":")[0] <= reservedTime.endtime.split(":")[0]
+        ) {
+          setError("Room already reserved at this time "+reservedTime.day+" - "+reservedTime.starttime+" - "+reservedTime.endtime);
+          setLoading(false);
+          return;
+        } else if (
+          endTime.split(":")[0] >= reservedTime.starttime.split(":")[0] &&
+          endTime.split(":")[0] <= reservedTime.endtime.split(":")[0]
+        ) {
+          setError("Room already reserved at this time "+reservedTime.day+" - "+reservedTime.starttime+" - "+reservedTime.endtime);
+          setLoading(false);
+          return;
+        } else {
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+
     console.log("start", startTime);
     console.log("end", endTime);
     console.log("date", day);
@@ -62,11 +123,9 @@ export default function ReserveButton({ suite, session }) {
         suite: suite.name,
         price: suite.price,
         reservDate: day,
-        starttime: starttime,
-        endtime: endtime,
+        starttime: startTime,
+        endtime: endTime,
         nbOfGuests: nbOfGuests,
-        starttime: `${hour}:${minute}:${second}`,
-        endtime: `${hour + 1}:${minute}:${second}`,
       });
       console.log("Document written with ID: ", docRef.id);
 
@@ -88,7 +147,6 @@ export default function ReserveButton({ suite, session }) {
       console.error("Error adding document: ", e);
     }
   };
-  
 
   if (loading) {
     return <Loading className={"me-md-5"} />;
@@ -145,7 +203,8 @@ export default function ReserveButton({ suite, session }) {
                   onChange={(newValue) => setEndtime(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                 />
-                <TextField variant="outlined"
+                <TextField
+                  variant="outlined"
                   label="Number of guests"
                   type="number"
                   value={nbOfGuests}
@@ -160,6 +219,15 @@ export default function ReserveButton({ suite, session }) {
                     Reserve
                   </Typography>
                 </Button>
+                {error && (
+                  <Typography
+                    id="modal-modal-title"
+                    align="center"
+                    color={"error"}
+                  >
+                    {error}
+                  </Typography>
+                )}
               </LocalizationProvider>
             </div>
           </Box>
